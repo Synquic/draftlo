@@ -1,3 +1,5 @@
+import type { Draft } from './schema';
+
 export type AppData = {
   menu: Array<{
     name: string;
@@ -13,24 +15,7 @@ export type AppData = {
     icon: string;
     description?: string;
   }>;
-  drafts: Array<{
-    name: string;
-    href: string;
-    icon?: string;
-    image: string;
-    description?: string;
-    price: {
-      amount: number;
-      ctaLink: string;
-    };
-    longDescription: string;
-    keyFeatures: string[];
-    idealFor: string[];
-    Note?: string;
-    keyDifferentiators: string[];
-    tableOfContents: string[];
-    disclaimer: string;
-  }>;
+  drafts: Draft[];
 };
 
 export async function getAppData(): Promise<AppData> {
