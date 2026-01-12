@@ -19,7 +19,9 @@ export interface Draft {
   id?: string;
   href: string;
   name: string;
+  icon?: string;
   image: string;
+  description?: string;
   price: {
     label?: string;
     amount: number;
