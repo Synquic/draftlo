@@ -2,6 +2,9 @@ import { Layout } from "@/components/Layout";
 import { CategoryCard } from "@/components/CategoryCard";
 import { getAppData } from "@/lib/api";
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 60;
+
 export default async function CategoriesPage() {
   const data = await getAppData();
 
