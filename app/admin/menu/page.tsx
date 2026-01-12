@@ -5,15 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Plus, Edit2, Trash2, Save, X, ChevronDown, ChevronUp } from 'lucide-react';
 import type { AppData } from '@/lib/api';
-
-interface MenuItem {
-  name: string;
-  href?: string;
-  items?: Array<{
-    name: string;
-    href: string;
-  }>;
-}
+import type { MenuItem } from '@/lib/schema';
 
 export default function MenuEditor() {
   const [data, setData] = useState<AppData | null>(null);

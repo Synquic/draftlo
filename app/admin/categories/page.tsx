@@ -6,13 +6,7 @@ import Link from 'next/link';
 import { Plus, Edit2, Trash2, Save, X } from 'lucide-react';
 import { ImageUpload } from '@/components/admin/ImageUpload';
 import type { AppData } from '@/lib/api';
-
-interface Category {
-  name: string;
-  href: string;
-  icon: string;
-  description?: string;
-}
+import type { Category } from '@/lib/schema';
 
 export default function CategoriesEditor() {
   const [data, setData] = useState<AppData | null>(null);

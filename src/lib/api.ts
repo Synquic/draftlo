@@ -1,20 +1,8 @@
-import type { Draft } from './schema';
+import type { Draft, MenuItem, Category } from './schema';
 
 export type AppData = {
-  menu: Array<{
-    name: string;
-    href: string;
-    items?: Array<{
-      name: string;
-      href: string;
-    }>;
-  }>;
-  categories: Array<{
-    name: string;
-    href: string;
-    icon: string;
-    description?: string;
-  }>;
+  menu: MenuItem[];
+  categories: Category[];
   drafts: Draft[];
 };
 
