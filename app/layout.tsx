@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -46,11 +47,13 @@ export default function RootLayout({
       <body className="font-body antialiased">
         <Providers>
           <TooltipProvider>
-            <AnalyticsProvider>
-              <Toaster />
-              <Sonner />
-              {children}
-            </AnalyticsProvider>
+            <Suspense fallback={null}>
+              <AnalyticsProvider>
+                <Toaster />
+                <Sonner />
+                {children}
+              </AnalyticsProvider>
+            </Suspense>
           </TooltipProvider>
         </Providers>
       </body>
