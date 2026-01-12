@@ -6,25 +6,7 @@ import Link from 'next/link';
 import { Plus, Edit2, Trash2, Save, X, Search, Eye } from 'lucide-react';
 import { ImageUpload } from '@/components/admin/ImageUpload';
 import type { AppData } from '@/lib/api';
-
-interface Draft {
-  name: string;
-  href: string;
-  icon?: string;
-  image: string;
-  description?: string;
-  longDescription: string;
-  keyFeatures: string[];
-  idealFor: string[];
-  Note?: string;
-  keyDifferentiators?: string[];
-  tableOfContents?: string[];
-  disclaimer?: string;
-  price: {
-    amount: number;
-    ctaLink: string;
-  };
-}
+import type { Draft } from '@/lib/schema';
 
 export default function DraftsManagement() {
   const [data, setData] = useState<AppData | null>(null);
@@ -94,6 +76,9 @@ export default function DraftsManagement() {
       longDescription: '',
       keyFeatures: [''],
       idealFor: [''],
+      keyDifferentiators: [''],
+      tableOfContents: [''],
+      disclaimer: 'This agreement does not constitute legal advice or legal services of any kind. This is merely a first draft provided for your ease. Please consult a lawyer before you finalise the draft.',
       price: {
         amount: 0,
         ctaLink: ''
@@ -104,7 +89,16 @@ export default function DraftsManagement() {
 
   const handleEdit = (index: number) => {
     setEditingIndex(index);
-    setEditingItem(JSON.parse(JSON.stringify(data!.drafts[index])));
+    const draft = data!.drafts[index];
+    setEditingItem({
+      ...JSON.parse(JSON.stringify(draft)),
+      keyDifferentiators: draft.keyDifferentiators || [],
+      tableOfContents: draft.tableOfContents || [],
+      disclaimer: draft.disclaimer || 'This agreement does not constitute legal advice or legal services of any kind. This is merely a first draft provided for your ease. Please consult a lawyer before you finalise the draft.',
+      keyFeatures: draft.keyFeatures || [],
+      idealFor: draft.idealFor || [],
+      longDescription: draft.longDescription || '',
+    });
     setShowModal(true);
   };
 
