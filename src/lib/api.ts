@@ -7,7 +7,17 @@ export type AppData = {
 };
 
 export async function getAppData(): Promise<AppData> {
-  // Use local API route instead of external API
+  // During build time, if no base URL is set, return empty data immediately
+  // This prevents fetch errors during static generation
+  if (process.env.NODE_ENV === 'production' && !process.env.NEXT_PUBLIC_BASE_URL) {
+    console.warn('No NEXT_PUBLIC_BASE_URL set during build, using empty fallback data');
+    return {
+      menu: [],
+      categories: [],
+      drafts: [],
+    };
+  }
+
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
 
   try {
@@ -20,9 +30,10 @@ export async function getAppData(): Promise<AppData> {
       throw new Error("Failed to fetch data");
     }
 
-    return res.json();
+    const data = await res.json();
+    return data;
   } catch (error) {
-    // During build time, if server is not running, return empty data
+    // During build time, if server is not running or response is invalid, return empty data
     console.warn('Failed to fetch app data, using fallback:', error);
     return {
       menu: [],
