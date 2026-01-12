@@ -7,6 +7,9 @@ import { Plus, Edit2, Trash2, Save, X, ChevronDown, ChevronUp } from 'lucide-rea
 import type { AppData } from '@/lib/api';
 import type { MenuItem } from '@/lib/schema';
 
+// Disable static generation for admin pages
+export const dynamic = 'force-dynamic';
+
 export default function MenuEditor() {
   const [data, setData] = useState<AppData | null>(null);
   const [loading, setLoading] = useState(true);
