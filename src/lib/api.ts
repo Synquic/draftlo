@@ -7,10 +7,9 @@ export type AppData = {
 };
 
 export async function getAppData(): Promise<AppData> {
-  // During build time, if no base URL is set, return empty data immediately
-  // This prevents fetch errors during static generation
-  if (process.env.NODE_ENV === 'production' && !process.env.NEXT_PUBLIC_BASE_URL) {
-    console.warn('No NEXT_PUBLIC_BASE_URL set during build, using empty fallback data');
+  // During build time, return empty data to prevent fetch errors
+  // Pages will be regenerated at runtime with actual data
+  if (typeof window === 'undefined' && process.env.NODE_ENV === 'production' && !process.env.NEXT_PUBLIC_BASE_URL) {
     return {
       menu: [],
       categories: [],
@@ -18,23 +17,26 @@ export async function getAppData(): Promise<AppData> {
     };
   }
 
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+  // At runtime, fetch from the API
+  // Use relative URL for client-side, absolute for server-side
+  const isServer = typeof window === 'undefined';
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || (isServer ? 'http://localhost:3000' : '');
 
   try {
     const res = await fetch(`${baseUrl}/api/data`, {
       // Revalidate every 60 seconds
       next: { revalidate: 60 },
+      cache: 'no-store', // Don't cache during development
     });
 
     if (!res.ok) {
-      throw new Error("Failed to fetch data");
+      throw new Error(`Failed to fetch data: ${res.status}`);
     }
 
     const data = await res.json();
     return data;
   } catch (error) {
-    // During build time, if server is not running or response is invalid, return empty data
-    console.warn('Failed to fetch app data, using fallback:', error);
+    console.error('Failed to fetch app data:', error);
     return {
       menu: [],
       categories: [],
