@@ -137,10 +137,21 @@ export default function DraftsManagement() {
 
     const newDrafts = [...data.drafts];
 
+    // Ensure all required fields have values
+    const draftToSave: Draft = {
+      ...editingItem,
+      keyDifferentiators: editingItem.keyDifferentiators || [],
+      tableOfContents: editingItem.tableOfContents || [],
+      keyFeatures: editingItem.keyFeatures || [],
+      idealFor: editingItem.idealFor || [],
+      longDescription: editingItem.longDescription || '',
+      disclaimer: editingItem.disclaimer || 'This agreement does not constitute legal advice or legal services of any kind. This is merely a first draft provided for your ease. Please consult a lawyer before you finalise the draft.',
+    };
+
     if (editingIndex === -1) {
-      newDrafts.push(editingItem);
+      newDrafts.push(draftToSave);
     } else if (editingIndex !== null) {
-      newDrafts[editingIndex] = editingItem;
+      newDrafts[editingIndex] = draftToSave;
     }
 
     setData({ ...data, drafts: newDrafts });
