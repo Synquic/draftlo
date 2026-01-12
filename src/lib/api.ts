@@ -10,16 +10,26 @@ export async function getAppData(): Promise<AppData> {
   // Use local API route instead of external API
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
 
-  const res = await fetch(`${baseUrl}/api/data`, {
-    // Revalidate every 60 seconds
-    next: { revalidate: 60 },
-  });
+  try {
+    const res = await fetch(`${baseUrl}/api/data`, {
+      // Revalidate every 60 seconds
+      next: { revalidate: 60 },
+    });
 
-  if (!res.ok) {
-    throw new Error("Failed to fetch data");
+    if (!res.ok) {
+      throw new Error("Failed to fetch data");
+    }
+
+    return res.json();
+  } catch (error) {
+    // During build time, if server is not running, return empty data
+    console.warn('Failed to fetch app data, using fallback:', error);
+    return {
+      menu: [],
+      categories: [],
+      drafts: [],
+    };
   }
-
-  return res.json();
 }
 
 // Function to update app data (for admin portal)
