@@ -6,27 +6,52 @@ const MIXPANEL_TOKEN = '1aa4299359bfd7b57a31eff981984d91';
 if (typeof window !== 'undefined') {
   try {
     mixpanel.init(MIXPANEL_TOKEN, {
-      debug: false, // Disable debug mode to reduce console noise
-      track_pageview: true,
+      debug: false,
+      track_pageview: false, // We'll track page views manually
       persistence: 'localStorage',
-      ignore_dnt: true, // Ignore Do Not Track
+      ignore_dnt: true,
+      api_host: 'https://api-js.mixpanel.com', // Use HTTPS endpoint
+      loaded: function() {
+        console.log('Mixpanel loaded successfully');
+      },
     });
   } catch (error) {
-    // Silently fail if Mixpanel can't be initialized
     console.warn('Mixpanel initialization failed:', error);
   }
 }
 
-// Helper to get user IP address
+// Cache user IP to avoid multiple fetches
+let cachedUserIP: string | null = null;
+let ipFetchPromise: Promise<string | null> | null = null;
+
+// Helper to get user IP address (cached)
 async function getUserIP(): Promise<string | null> {
-  try {
-    const response = await fetch('https://api.ipify.org?format=json');
-    const data = await response.json();
-    return data.ip;
-  } catch (error) {
-    console.error('Failed to get user IP:', error);
-    return null;
+  // Return cached IP if available
+  if (cachedUserIP) {
+    return cachedUserIP;
   }
+
+  // Return existing promise if fetch is in progress
+  if (ipFetchPromise) {
+    return ipFetchPromise;
+  }
+
+  // Start new fetch
+  ipFetchPromise = (async () => {
+    try {
+      const response = await fetch('https://api.ipify.org?format=json');
+      const data = await response.json();
+      cachedUserIP = data.ip;
+      return cachedUserIP;
+    } catch (error) {
+      console.debug('Failed to get user IP:', error);
+      return null;
+    } finally {
+      ipFetchPromise = null;
+    }
+  })();
+
+  return ipFetchPromise;
 }
 
 // Helper to get session ID
@@ -35,7 +60,7 @@ function getOrCreateSessionId(): string {
 
   let sessionId = sessionStorage.getItem('analytics_session_id');
   if (!sessionId) {
-    sessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    sessionId = `session_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
     sessionStorage.setItem('analytics_session_id', sessionId);
   }
   return sessionId;
