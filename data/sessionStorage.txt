@@ -1,0 +1,4 @@
+draftlo_custom_session_id = "uuid"
+draftlo_buy_draft_visit_tracked = true
+draftlo_add_to_cart_visit_tracked = true
+draftlo_success_page_visit_tracked = true

@@ -1,25 +1,10 @@
 'use client';
 
-import { useEffect } from 'react';
-import Script from 'next/script';
+import Script from "next/script";
+
+const META_PIXEL_ID = "YOUR_PIXEL_ID"; // 👈 replace this
 
 export function MetaPixel() {
-  useEffect(() => {
-    // Initialize Meta Pixel
-    if (typeof window !== 'undefined') {
-      (window as any).fbq = function() {
-        (window as any).fbq.callMethod
-          ? (window as any).fbq.callMethod.apply((window as any).fbq, arguments)
-          : (window as any).fbq.queue.push(arguments);
-      };
-      if (!(window as any)._fbq) (window as any)._fbq = (window as any).fbq;
-      (window as any).fbq.push = (window as any).fbq;
-      (window as any).fbq.loaded = true;
-      (window as any).fbq.version = '2.0';
-      (window as any).fbq.queue = [];
-    }
-  }, []);
-
   return (
     <>
       <Script
@@ -35,17 +20,20 @@ export function MetaPixel() {
             t.src=v;s=b.getElementsByTagName(e)[0];
             s.parentNode.insertBefore(t,s)}(window, document,'script',
             'https://connect.facebook.net/en_US/fbevents.js');
-            fbq('init', 'YOUR_META_PIXEL_ID');
+
+            fbq('init', '${META_PIXEL_ID}');
             fbq('track', 'PageView');
           `,
         }}
       />
+
       <noscript>
         <img
           height="1"
           width="1"
-          style={{ display: 'none' }}
-          src="https://www.facebook.com/tr?id=YOUR_META_PIXEL_ID&ev=PageView&noscript=1"
+          style={{ display: "none" }}
+          src={`https://www.facebook.com/tr?id=${META_PIXEL_ID}&ev=PageView&noscript=1`}
+          alt=""
         />
       </noscript>
     </>

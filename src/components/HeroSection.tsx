@@ -16,7 +16,7 @@ export const HeroSection = () => {
   };
 
   return (
-    <section className="relative py-20 md:py-32 overflow-hidden">
+    <section className="relative py-20 md:py-32 overflow-x-hidden">
       {/* Grid Background */}
       <div className="absolute inset-0 bg-gradient-to-br from-gray-50 to-gray-100">
         <div

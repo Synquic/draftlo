@@ -6,9 +6,6 @@ import Link from 'next/link';
 import { FileText, FolderOpen, Menu, LogOut, Eye, DollarSign } from 'lucide-react';
 import type { AppData } from '@/lib/api';
 
-// Disable static generation for admin pages
-export const dynamic = 'force-dynamic';
-
 export default function AdminDashboard() {
   const [data, setData] = useState<AppData | null>(null);
   const [loading, setLoading] = useState(true);

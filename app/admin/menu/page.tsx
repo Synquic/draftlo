@@ -5,10 +5,15 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Plus, Edit2, Trash2, Save, X, ChevronDown, ChevronUp } from 'lucide-react';
 import type { AppData } from '@/lib/api';
-import type { MenuItem } from '@/lib/schema';
 
-// Disable static generation for admin pages
-export const dynamic = 'force-dynamic';
+interface MenuItem {
+  name: string;
+  href?: string;
+  items?: Array<{
+    name: string;
+    href: string;
+  }>;
+}
 
 export default function MenuEditor() {
   const [data, setData] = useState<AppData | null>(null);

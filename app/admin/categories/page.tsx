@@ -6,10 +6,13 @@ import Link from 'next/link';
 import { Plus, Edit2, Trash2, Save, X } from 'lucide-react';
 import { ImageUpload } from '@/components/admin/ImageUpload';
 import type { AppData } from '@/lib/api';
-import type { Category } from '@/lib/schema';
 
-// Disable static generation for admin pages
-export const dynamic = 'force-dynamic';
+interface Category {
+  name: string;
+  href: string;
+  icon: string;
+  description?: string;
+}
 
 export default function CategoriesEditor() {
   const [data, setData] = useState<AppData | null>(null);

@@ -29,11 +29,11 @@ export const CategoryCard = ({
 
         {/* Title and Description */}
         <div className="p-5 flex-grow flex flex-col">
-          <h3 className="text-base font-semibold text-gray-900 group-hover:text-blue-600 transition-colors mb-2">
+          <h3 className="text-base text-center font-semibold text-gray-900 group-hover:text-blue-600 transition-colors mb-2">
             {name}
           </h3>
           {description && (
-            <p className="text-sm text-gray-600 line-clamp-3 flex-grow">
+            <p className="text-sm text-gray-600 text-center line-clamp-3 flex-grow">
               {description}
             </p>
           )}
