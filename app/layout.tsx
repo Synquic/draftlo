@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -59,18 +60,20 @@ export default function RootLayout({
       <body className="font-body antialiased min-h-screen">
         <Providers>
           <TooltipProvider>
-            <AnalyticsProvider>
-              {/* 🔑 ROOT STRUCTURE FIX */}
-              <div className="flex min-h-screen flex-col overflow-x-hidden">
-                <Toaster />
-                <Sonner />
+            <Suspense fallback={null}>
+              <AnalyticsProvider>
+                {/* 🔑 ROOT STRUCTURE FIX */}
+                <div className="flex min-h-screen flex-col overflow-x-hidden">
+                  <Toaster />
+                  <Sonner />
 
-                {/* Pages (Navbar lives inside pages) */}
-                <main className="flex-1 overflow-visible">
-                  {children}
-                </main>
-              </div>
-            </AnalyticsProvider>
+                  {/* Pages (Navbar lives inside pages) */}
+                  <main className="flex-1 overflow-visible">
+                    {children}
+                  </main>
+                </div>
+              </AnalyticsProvider>
+            </Suspense>
           </TooltipProvider>
         </Providers>
       </body>
