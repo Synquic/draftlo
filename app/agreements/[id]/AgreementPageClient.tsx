@@ -4,7 +4,7 @@ import React, { useEffect } from "react";
 import NewNavbar from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { analytics } from "@/lib/analytics";
-import { getCustomSessionId } from "@/lib/customSession";
+
 interface AgreementPageProps {
   agreement: any;
   data: any;
@@ -22,9 +22,7 @@ export default function AgreementPageClient({ agreement, data }: AgreementPagePr
   }, [agreement]);
 
   const handleGetDraftClick = () => {
-    // Track form redirect
-    let sessionId = getCustomSessionId();
-    
+    // Track Add to Cart event (includes Mixpanel and Facebook Pixel tracking)
     analytics.trackFormRedirect({
       documentName: agreement.name,
       documentId: agreement.href,

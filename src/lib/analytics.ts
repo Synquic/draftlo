@@ -1,3 +1,5 @@
+
+
 import mixpanel from 'mixpanel-browser';
 
 // Initialize Mixpanel
@@ -168,17 +170,25 @@ export const analytics = {
         timestamp: new Date().toISOString(),
       };
 
-      mixpanel.track('Form Redirect', eventProperties);
+      mixpanel.track('Add to Cart', eventProperties);
 
-      // Meta Pixel - InitiateCheckout event
+      // Meta Pixel - AddToCart event
       if (typeof window !== 'undefined' && (window as any).fbq) {
-        (window as any).fbq('track', 'InitiateCheckout', {
+        (window as any).fbq('track', 'AddToCart', {
           content_name: documentData.documentName,
           content_category: documentData.documentCategory,
           content_ids: [documentData.documentId],
           content_type: 'product',
           value: documentData.price,
           currency: 'INR',
+          session_id: sessionId,
+          external_id: '1461517148655115',
+        });
+
+        console.log('Facebook Pixel: AddToCart event tracked', {
+          product: documentData.documentName,
+          price: documentData.price,
+          sessionId,
         });
       }
     } catch (error) {
