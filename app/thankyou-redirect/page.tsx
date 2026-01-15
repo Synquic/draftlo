@@ -46,36 +46,40 @@ export default function SuccessPage() {
   }, [searchParams]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 flex items-center justify-center px-4">
-      <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 text-center">
-        <div className="mb-6">
-          <CheckCircle className="w-20 h-20 text-green-500 mx-auto" />
-        </div>
+    <div
+    className="min-h-screen w-full flex items-center justify-center text-center"
+    style={{
+      background: `
+        linear-gradient(
+          135deg,
+          #0a1a33 0%,
+          #070b16 45%,
+          #120a2a 100%
+        )
+      `,
+    }}
+  >
+    <div className="max-w-3xl px-6">
+      <h1 className="text-3xl md:text-4xl font-semibold text-white mb-6">
+        Thank you for choosing Draftlo
+      </h1>
 
-        <h1 className="text-3xl font-bold text-gray-900 mb-4">
-          Purchase Successful!
-        </h1>
+      <p className="text-base md:text-lg text-gray-300 mb-2">
+        You will receive your draft in your inbox within 10 minutes.
+      </p>
 
-        <p className="text-gray-600 mb-8">
-          Thank you for your purchase. You will receive your legal draft shortly via email.
-        </p>
+      <p className="text-base md:text-lg text-gray-300 mb-10">
+        Please check your Spam/Junk Folder also.
+      </p>
 
-        <div className="space-y-4">
-          <Link
-            href="/"
-            className="block w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition"
-          >
-            Back to Home
-          </Link>
+      <p className="text-base md:text-lg text-gray-300">
+        If you still have not received it, please contact
+      </p>
 
-          <Link
-            href="/category"
-            className="block w-full border-2 border-gray-300 text-gray-700 py-3 px-6 rounded-lg font-semibold hover:border-gray-400 transition"
-          >
-            Browse More Documents
-          </Link>
-        </div>
-      </div>
+      <p className="mt-2 text-base md:text-lg text-white font-medium">
+        support@draftlo.com
+      </p>
     </div>
+  </div>
   );
 }
