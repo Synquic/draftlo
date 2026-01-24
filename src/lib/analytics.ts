@@ -1,52 +1,41 @@
+import mixpanel from "mixpanel-browser";
 
+/* -------------------------------------
+   MIXPANEL INIT (unchanged)
+------------------------------------- */
+const MIXPANEL_TOKEN = "1aa4299359bfd7b57a31eff981984d91";
 
-import mixpanel from 'mixpanel-browser';
-
-// Initialize Mixpanel
-const MIXPANEL_TOKEN = '1aa4299359bfd7b57a31eff981984d91';
-
-if (typeof window !== 'undefined') {
+if (typeof window !== "undefined") {
   try {
     mixpanel.init(MIXPANEL_TOKEN, {
       debug: false,
-      track_pageview: false, // We'll track page views manually
-      persistence: 'localStorage',
+      track_pageview: false,
+      persistence: "localStorage",
       ignore_dnt: true,
-      api_host: 'https://api-js.mixpanel.com', // Use HTTPS endpoint
-      loaded: function() {
-        console.log('Mixpanel loaded successfully');
-      },
+      api_host: "https://api-js.mixpanel.com",
     });
   } catch (error) {
-    console.warn('Mixpanel initialization failed:', error);
+    console.warn("Mixpanel initialization failed:", error);
   }
 }
 
-// Cache user IP to avoid multiple fetches
+/* -------------------------------------
+   IP + SESSION HELPERS (unchanged)
+------------------------------------- */
 let cachedUserIP: string | null = null;
 let ipFetchPromise: Promise<string | null> | null = null;
 
-// Helper to get user IP address (cached)
 async function getUserIP(): Promise<string | null> {
-  // Return cached IP if available
-  if (cachedUserIP) {
-    return cachedUserIP;
-  }
+  if (cachedUserIP) return cachedUserIP;
+  if (ipFetchPromise) return ipFetchPromise;
 
-  // Return existing promise if fetch is in progress
-  if (ipFetchPromise) {
-    return ipFetchPromise;
-  }
-
-  // Start new fetch
   ipFetchPromise = (async () => {
     try {
-      const response = await fetch('https://api.ipify.org?format=json');
+      const response = await fetch("https://api.ipify.org?format=json");
       const data = await response.json();
       cachedUserIP = data.ip;
       return cachedUserIP;
-    } catch (error) {
-      console.debug('Failed to get user IP:', error);
+    } catch {
       return null;
     } finally {
       ipFetchPromise = null;
@@ -56,232 +45,113 @@ async function getUserIP(): Promise<string | null> {
   return ipFetchPromise;
 }
 
-// Helper to get session ID
 function getOrCreateSessionId(): string {
-  if (typeof window === 'undefined') return '';
+  if (typeof window === "undefined") return "";
 
-  let sessionId = sessionStorage.getItem('analytics_session_id');
+  let sessionId = sessionStorage.getItem("analytics_session_id");
   if (!sessionId) {
-    sessionId = `session_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
-    sessionStorage.setItem('analytics_session_id', sessionId);
+    sessionId = `session_${crypto.randomUUID()}`;
+    sessionStorage.setItem("analytics_session_id", sessionId);
   }
   return sessionId;
 }
 
-// Analytics functions
+/* -------------------------------------
+   ANALYTICS API
+------------------------------------- */
 export const analytics = {
-  // Track page view
-  async trackPageView(pageName: string, properties?: Record<string, any>) {
-    if (typeof window === 'undefined') return;
-
-    try {
-      const userIP = await getUserIP();
-      const sessionId = getOrCreateSessionId();
-
-      const eventProperties = {
-        page_name: pageName,
-        page_url: window.location.href,
-        page_path: window.location.pathname,
-        referrer: document.referrer,
-        user_ip: userIP,
-        session_id: sessionId,
-        timestamp: new Date().toISOString(),
-        ...properties,
-      };
-
-      mixpanel.track('Page View', eventProperties);
-
-      // Also track to Meta Pixel if available
-      if (typeof window !== 'undefined' && (window as any).fbq) {
-        (window as any).fbq('track', 'PageView', eventProperties);
-      }
-    } catch (error) {
-      // Silently fail - analytics should not break the app
-      console.debug('Analytics tracking failed:', error);
-    }
-  },
-
-  // Track document view
-  async trackDocumentView(documentData: {
+  /* ---------- Document View ---------- */
+  async trackDocumentView(data: {
     documentName: string;
     documentId: string;
     documentCategory?: string;
     price?: number;
   }) {
-    if (typeof window === 'undefined') return;
+    if (typeof window === "undefined") return;
 
-    try {
-      const userIP = await getUserIP();
-      const sessionId = getOrCreateSessionId();
+    const sessionId = getOrCreateSessionId();
+    const eventId = crypto.randomUUID();
 
-      const eventProperties = {
-        document_name: documentData.documentName,
-        document_id: documentData.documentId,
-        document_category: documentData.documentCategory,
-        price: documentData.price,
-        page_url: window.location.href,
-        user_ip: userIP,
-        session_id: sessionId,
-        timestamp: new Date().toISOString(),
-      };
+    mixpanel.track("Document Viewed", {
+      ...data,
+      session_id: sessionId,
+    });
 
-      mixpanel.track('Document Viewed', eventProperties);
-
-      // Meta Pixel - ViewContent event
-      if (typeof window !== 'undefined' && (window as any).fbq) {
-        (window as any).fbq('track', 'ViewContent', {
-          content_name: documentData.documentName,
-          content_category: documentData.documentCategory,
-          content_ids: [documentData.documentId],
-          content_type: 'product',
-          value: documentData.price,
-          currency: 'INR',
-        });
-      }
-    } catch (error) {
-      // Silently fail - analytics should not break the app
-      console.debug('Analytics tracking failed:', error);
+    // Meta Pixel (Browser)
+    if ((window as any).fbq) {
+      (window as any).fbq(
+        "track",
+        "ViewContent",
+        {
+          content_name: data.documentName,
+          content_category: data.documentCategory,
+          content_ids: [data.documentId],
+          content_type: "product",
+          value: data.price,
+          currency: "INR",
+        },
+        { eventID: eventId }
+      );
     }
+
+    // Meta Conversion API (Server)
+    fetch("/meta-conversion", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        eventName: "ViewContent",
+        eventId,
+        value: data.price,
+        currency: "INR",
+      }),
+    });
   },
 
-  // Track form redirect (when user clicks "Get Draft" button)
-  async trackFormRedirect(documentData: {
+  /* ---------- Add To Cart ---------- */
+  async trackFormRedirect(data: {
     documentName: string;
     documentId: string;
     documentCategory?: string;
     price: number;
     formUrl: string;
+    eventId: string;
   }) {
-    if (typeof window === 'undefined') return;
+    if (typeof window === "undefined") return;
 
-    try {
-      const userIP = await getUserIP();
-      const sessionId = getOrCreateSessionId();
+    const sessionId = getOrCreateSessionId();
 
-      const eventProperties = {
-        document_name: documentData.documentName,
-        document_id: documentData.documentId,
-        document_category: documentData.documentCategory,
-        price: documentData.price,
-        form_url: documentData.formUrl,
-        source_url: window.location.href,
-        user_ip: userIP,
-        session_id: sessionId,
-        timestamp: new Date().toISOString(),
-      };
+    mixpanel.track("Add to Cart", {
+      ...data,
+      session_id: sessionId,
+    });
 
-      mixpanel.track('Add to Cart', eventProperties);
-
-      // Meta Pixel - AddToCart event
-      if (typeof window !== 'undefined' && (window as any).fbq) {
-        (window as any).fbq('track', 'AddToCart', {
-          content_name: documentData.documentName,
-          content_category: documentData.documentCategory,
-          content_ids: [documentData.documentId],
-          content_type: 'product',
-          value: documentData.price,
-          currency: 'INR',
-          session_id: sessionId,
-          external_id: '1461517148655115',
-        });
-
-        console.log('Facebook Pixel: AddToCart event tracked', {
-          product: documentData.documentName,
-          price: documentData.price,
-          sessionId,
-        });
-      }
-    } catch (error) {
-      // Silently fail - analytics should not break the app
-      console.debug('Analytics tracking failed:', error);
+    // Meta Pixel (Browser)
+    if ((window as any).fbq) {
+      (window as any).fbq(
+        "track",
+        "AddToCart",
+        {
+          content_name: data.documentName,
+          content_category: data.documentCategory,
+          content_ids: [data.documentId],
+          content_type: "product",
+          value: data.price,
+          currency: "INR",
+        },
+        { eventID: data.eventId }
+      );
     }
-  },
 
-  // Track search
-  async trackSearch(searchQuery: string, resultsCount: number) {
-    if (typeof window === 'undefined') return;
-
-    try {
-      const userIP = await getUserIP();
-      const sessionId = getOrCreateSessionId();
-
-      const eventProperties = {
-        search_query: searchQuery,
-        results_count: resultsCount,
-        page_url: window.location.href,
-        user_ip: userIP,
-        session_id: sessionId,
-        timestamp: new Date().toISOString(),
-      };
-
-      mixpanel.track('Search', eventProperties);
-
-      // Meta Pixel - Search event
-      if (typeof window !== 'undefined' && (window as any).fbq) {
-        (window as any).fbq('track', 'Search', {
-          search_string: searchQuery,
-        });
-      }
-    } catch (error) {
-      // Silently fail - analytics should not break the app
-      console.debug('Analytics tracking failed:', error);
-    }
-  },
-
-  // Track category view
-  async trackCategoryView(categoryName: string, documentCount: number) {
-    if (typeof window === 'undefined') return;
-
-    try {
-      const userIP = await getUserIP();
-      const sessionId = getOrCreateSessionId();
-
-      const eventProperties = {
-        category_name: categoryName,
-        document_count: documentCount,
-        page_url: window.location.href,
-        user_ip: userIP,
-        session_id: sessionId,
-        timestamp: new Date().toISOString(),
-      };
-
-      mixpanel.track('Category Viewed', eventProperties);
-
-      // Meta Pixel
-      if (typeof window !== 'undefined' && (window as any).fbq) {
-        (window as any).fbq('track', 'ViewContent', {
-          content_name: categoryName,
-          content_type: 'category',
-        });
-      }
-    } catch (error) {
-      // Silently fail - analytics should not break the app
-      console.debug('Analytics tracking failed:', error);
-    }
-  },
-
-  // Identify user (optional - for logged in users)
-  identifyUser(userId: string, traits?: Record<string, any>) {
-    if (typeof window === 'undefined') return;
-
-    try {
-      mixpanel.identify(userId);
-      if (traits) {
-        mixpanel.people.set(traits);
-      }
-    } catch (error) {
-      console.debug('Analytics user identification failed:', error);
-    }
-  },
-
-  // Set user properties
-  setUserProperties(properties: Record<string, any>) {
-    if (typeof window === 'undefined') return;
-
-    try {
-      mixpanel.people.set(properties);
-    } catch (error) {
-      console.debug('Analytics user properties update failed:', error);
-    }
+    // Meta Conversion API (Server)
+    fetch("/meta-conversion", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        eventName: "AddToCart",
+        eventId: data.eventId,
+        value: data.price,
+        currency: "INR",
+      }),
+    });
   },
 };

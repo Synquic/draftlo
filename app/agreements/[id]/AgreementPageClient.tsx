@@ -10,26 +10,48 @@ interface AgreementPageProps {
   data: any;
 }
 
-export default function AgreementPageClient({ agreement, data }: AgreementPageProps) {
+export default function AgreementPageClient({
+  agreement,
+  data,
+}: AgreementPageProps) {
+
+  /**
+   * Track ViewContent (Document View)
+   */
   useEffect(() => {
-    // Track document view
+    if (!agreement) return;
+
     analytics.trackDocumentView({
       documentName: agreement.name,
       documentId: agreement.href,
-      documentCategory: agreement.category || 'Uncategorized',
-      price: agreement.price.amount,
+      documentCategory: agreement.category || "Uncategorized",
+      price: agreement.price?.amount,
     });
   }, [agreement]);
 
-  const handleGetDraftClick = () => {
-    // Track Add to Cart event (includes Mixpanel and Facebook Pixel tracking)
+  /**
+   * Track AddToCart + redirect safely
+   */
+  const handleGetDraftClick = (
+    e: React.MouseEvent<HTMLAnchorElement>
+  ) => {
+    e.preventDefault(); // ⛔ stop instant navigation
+
+    const eventId = crypto.randomUUID(); // 🔑 deduplication key
+
     analytics.trackFormRedirect({
       documentName: agreement.name,
       documentId: agreement.href,
-      documentCategory: agreement.category || 'Uncategorized',
+      documentCategory: agreement.category || "Uncategorized",
       price: agreement.price.amount,
       formUrl: agreement.price.ctaLink,
+      eventId,
     });
+
+    // ✅ allow Meta Pixel + CAPI to flush
+    setTimeout(() => {
+      window.open(agreement.price.ctaLink, "_blank");
+    }, 300);
   };
 
   return (
@@ -66,8 +88,6 @@ export default function AgreementPageClient({ agreement, data }: AgreementPagePr
 
                 <a
                   href={agreement?.price?.ctaLink}
-                  target="_blank"
-                  rel="noreferrer"
                   onClick={handleGetDraftClick}
                   className="inline-block bg-black text-white px-6 py-2 rounded-md hover:bg-gray-800 transition"
                 >
@@ -81,14 +101,18 @@ export default function AgreementPageClient({ agreement, data }: AgreementPagePr
               </p>
 
               {/* KEY FEATURES */}
-              <section className="mb-8">
-                <h3 className="text-lg font-semibold text-gray-900 mb-3">Key Features</h3>
-                <ul className="list-disc pl-5 space-y-1 text-gray-700">
-                  {agreement?.keyFeatures?.map((item, index) => (
-                    <li key={index}>{item}</li>
-                  ))}
-                </ul>
-              </section>
+              {agreement?.keyFeatures?.length > 0 && (
+                <section className="mb-8">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-3">
+                    Key Features
+                  </h3>
+                  <ul className="list-disc pl-5 space-y-1 text-gray-700">
+                    {agreement.keyFeatures.map((item: string, index: number) => (
+                      <li key={index}>{item}</li>
+                    ))}
+                  </ul>
+                </section>
+              )}
 
               {/* IDEAL FOR */}
               {agreement?.idealFor?.length > 0 && (
@@ -98,16 +122,22 @@ export default function AgreementPageClient({ agreement, data }: AgreementPagePr
                 </p>
               )}
 
-              {/* NOTE SECTION */}
-              {agreement?.Note &&<div className="mb-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-2"><strong>Note: </strong>
-                {agreement?.Note}</h3>
-              </div>}
+              {/* NOTE */}
+              {agreement?.Note && (
+                <div className="mb-6">
+                  <p className="text-gray-700">
+                    <strong className="text-gray-900">Note: </strong>
+                    {agreement.Note}
+                  </p>
+                </div>
+              )}
 
               {/* KEY DIFFERENTIATORS */}
               {agreement?.keyDifferentiators?.length > 0 && (
                 <p className="mb-4 text-gray-700">
-                  <strong className="text-gray-900">Key Differentiator: </strong>
+                  <strong className="text-gray-900">
+                    Key Differentiator:{" "}
+                  </strong>
                   {agreement.keyDifferentiators.join(", ")}
                 </p>
               )}
@@ -119,9 +149,11 @@ export default function AgreementPageClient({ agreement, data }: AgreementPagePr
                     Table of Contents
                   </h3>
                   <ul className="list-disc pl-6 text-gray-700">
-                    {agreement.tableOfContents.map((item, i) => (
-                      <li key={i}>{item}</li>
-                    ))}
+                    {agreement.tableOfContents.map(
+                      (item: string, i: number) => (
+                        <li key={i}>{item}</li>
+                      )
+                    )}
                   </ul>
                 </>
               )}
@@ -129,13 +161,15 @@ export default function AgreementPageClient({ agreement, data }: AgreementPagePr
               {/* DISCLAIMER */}
               {agreement?.disclaimer && (
                 <p className="mt-6 text-gray-700 text-sm border-t border-gray-200 pt-4 font-semibold">
-                  <strong className="text-gray-900">Disclaimer:</strong> {agreement.disclaimer}
+                  <strong className="text-gray-900">Disclaimer:</strong>{" "}
+                  {agreement.disclaimer}
                 </p>
               )}
             </div>
           </div>
         </div>
       </div>
+
       <Footer />
     </>
   );
