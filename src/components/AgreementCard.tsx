@@ -30,8 +30,12 @@ export const AgreementCard = ({
 
   const handleGetDraftClick = (e: React.MouseEvent) => {
     if (!price) return;
+
+    const eventId = crypto.randomUUID(); // Generate unique event ID for deduplication
+
     getCustomSessionId();
-    // 🔥 CUSTOM SESSION TRACKING (ONCE PER SESSION)
+
+    // Custom session tracking
     trackCustomSessionEvent("buy_draft_visit", {
       document_name: name,
       document_href: href,
@@ -39,12 +43,13 @@ export const AgreementCard = ({
       cta_link: price.ctaLink,
     });
 
-    // ✅ EXISTING ANALYTICS (UNCHANGED)
+    // Track AddToCart with event ID
     analytics.trackFormRedirect({
       documentName: name,
       documentId: href,
       price: price.amount,
       formUrl: price.ctaLink,
+      eventId,
     });
   };
 

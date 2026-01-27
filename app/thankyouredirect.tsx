@@ -2,7 +2,6 @@
 
 import { useEffect } from 'react'
 import { useSearchParams } from 'next/navigation'
-import { analytics } from '@/lib/analytics'
 import { trackCustomSessionEvent } from '@/lib/customSession'
 
 export default function SuccessPage() {
@@ -12,17 +11,36 @@ export default function SuccessPage() {
   const email = searchParams?.get('email') || ''
 
   useEffect(() => {
-    // Existing analytics (unchanged)
-    analytics.trackPageView('Purchase Success', {
-      document_name: documentName,
-      user_email: email,
-      conversion: true,
-    })
+    // Track Purchase event to Facebook Pixel
+    if (typeof window !== 'undefined' && (window as any).fbq) {
+      const eventId = crypto.randomUUID();
 
-    // 🔥 Custom session tracking
+      (window as any).fbq('track', 'Purchase', {
+        content_name: documentName,
+        content_type: 'product',
+        value: 0, // Update with actual price if available
+        currency: 'INR',
+      }, { eventID: eventId });
+
+      console.log('Facebook Pixel: Purchase event tracked', {
+        product: documentName,
+        email,
+      });
+    }
+
+    // Track to Mixpanel
+    if (typeof window !== 'undefined' && (window as any).mixpanel) {
+      (window as any).mixpanel.track('Purchase Complete', {
+        document_name: documentName,
+        user_email: email,
+        conversion: true,
+      });
+    }
+
+    // Custom session tracking
     trackCustomSessionEvent('success_page_visit', {
       document_name: documentName,
-    })
+    });
   }, [documentName, email])
 
   return (
