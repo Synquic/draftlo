@@ -27,6 +27,11 @@ export const metadata = {
     "Generate professional legal drafts within 5 minutes. Rental agreements, employment contracts, NDAs, and more. Fast, easy, and legally compliant.",
   keywords:
     "legal drafts, rental agreement, employment contract, NDA, legal templates, power of attorney",
+  verification: {
+    other: {
+      "facebook-domain-verification": "dsqs8e04v4yuy5thze53mpqpkc92nc",
+    },
+  },
   openGraph: {
     title: "Draftlo - Generate Legal Drafts within 5 Minutes",
     description:
