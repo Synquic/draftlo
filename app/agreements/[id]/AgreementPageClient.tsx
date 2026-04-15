@@ -4,6 +4,7 @@ import React, { useEffect } from "react";
 import NewNavbar from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { analytics } from "@/lib/analytics";
+import BuyButton from "@/components/BuyButton";
 
 interface AgreementPageProps {
   agreement: any;
@@ -17,6 +18,7 @@ export default function AgreementPageClient({
 
   /**
    * Track ViewContent (Document View)
+   * ── UNCHANGED — same as before ──
    */
   useEffect(() => {
     if (!agreement) return;
@@ -28,31 +30,6 @@ export default function AgreementPageClient({
       price: agreement.price?.amount,
     });
   }, [agreement]);
-
-  /**
-   * Track AddToCart + redirect safely
-   */
-  const handleGetDraftClick = (
-    e: React.MouseEvent<HTMLAnchorElement>
-  ) => {
-    e.preventDefault(); // ⛔ stop instant navigation
-
-    const eventId = crypto.randomUUID(); // 🔑 deduplication key
-
-    analytics.trackFormRedirect({
-      documentName: agreement.name,
-      documentId: agreement.href,
-      documentCategory: agreement.category || "Uncategorized",
-      price: agreement.price.amount,
-      formUrl: agreement.price.ctaLink,
-      eventId,
-    });
-
-    // ✅ allow Meta Pixel + CAPI to flush
-    setTimeout(() => {
-      window.open(agreement.price.ctaLink, "_blank");
-    }, 300);
-  };
 
   return (
     <>
@@ -78,7 +55,7 @@ export default function AgreementPageClient({
                 {agreement?.name}
               </h1>
 
-              {/* Price */}
+              {/* Price + Buy Button */}
               <div className="bg-gray-50 border border-gray-200 rounded-lg p-5 mb-6">
                 <p className="text-2xl font-semibold text-gray-900 mb-3">
                   ₹{agreement?.price?.amount?.toLocaleString("en-IN", {
@@ -86,13 +63,13 @@ export default function AgreementPageClient({
                   })}
                 </p>
 
-                <a
-                  href={agreement?.price?.ctaLink}
-                  onClick={handleGetDraftClick}
-                  className="inline-block bg-black text-white px-6 py-2 rounded-md hover:bg-gray-800 transition"
-                >
-                  Get Draft @ ₹{agreement?.price?.amount}
-                </a>
+                {/* ── CHANGED: BuyButton replaces the old <a> tag ── */}
+                <BuyButton
+                  productId={agreement.href}
+                  productName={agreement.name}
+                  price={agreement.price.amount}
+                  category={agreement.category || "Uncategorized"}
+                />
               </div>
 
               {/* DESCRIPTION */}
