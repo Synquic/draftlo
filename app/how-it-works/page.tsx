@@ -81,7 +81,7 @@ export default async function HowItWorksPage() {
                   </div>
                   <h3 className="text-2xl font-bold text-gray-900 mb-4">Get Your Document</h3>
                   <p className="text-gray-600 leading-relaxed mb-4">
-                    Receive your customizable document instantly via email. Download, customize with your specific details, and you're ready to use it!
+                    Receive your standardised document instantly via email. Download it, and you're ready to use it!
                   </p>
                   <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                     <p className="text-sm text-gray-700">
@@ -129,9 +129,9 @@ export default async function HowItWorksPage() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                   </svg>
                 </div>
-                <h3 className="text-lg font-bold text-gray-900 mb-2">Fully Customizable</h3>
+                <h3 className="text-lg font-bold text-gray-900 mb-2">Standardised Drafts</h3>
                 <p className="text-gray-600 text-sm">
-                  Edit the documents to match your specific needs with Word format files.
+                  Professionally drafted, standardised documents ready to use in Word format.
                 </p>
               </div>
 
@@ -165,7 +165,7 @@ export default async function HowItWorksPage() {
                 </div>
                 <div>
                   <h4 className="font-semibold text-gray-900 mb-1">Editable Word Document</h4>
-                  <p className="text-gray-600 text-sm">Customize every section to match your specific requirements</p>
+                  <p className="text-gray-600 text-sm">Standardised templates drafted by legal professionals</p>
                 </div>
               </div>
 
@@ -258,10 +258,10 @@ export default async function HowItWorksPage() {
 
               <div className="bg-white p-6 rounded-lg shadow-md">
                 <h3 className="text-lg font-bold text-gray-900 mb-2">
-                  Can I customize the documents after downloading?
+                  Are the documents standardised and ready to use?
                 </h3>
                 <p className="text-gray-600">
-                  Absolutely! All documents are provided in editable Word format, allowing you to customize them according to your specific needs. You can modify clauses, add terms, or adjust any section as required.
+                  Yes! All documents are standardised, lawyer-drafted templates provided in editable Word format. They are ready to use as-is, and you can also modify clauses or adjust sections if needed.
                 </p>
               </div>
 
@@ -276,10 +276,10 @@ export default async function HowItWorksPage() {
 
               <div className="bg-white p-6 rounded-lg shadow-md">
                 <h3 className="text-lg font-bold text-gray-900 mb-2">
-                  What if I need help with customization?
+                  What if I need help with the document?
                 </h3>
                 <p className="text-gray-600">
-                  Our customer support team is here to help! Contact us via email or phone, and we'll guide you through the customization process. For legal advice, we recommend consulting with a qualified attorney.
+                  Our customer support team is here to help! Contact us via email, phone, or WhatsApp and we'll guide you through the process. For legal advice, we recommend consulting with a qualified attorney.
                 </p>
               </div>
 

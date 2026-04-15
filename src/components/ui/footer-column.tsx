@@ -18,7 +18,7 @@ export default function FooterColumn() {
               />
             </div>
             <p className="text-gray-400 text-sm leading-relaxed">
-              Generate professional legal drafts within 5 minutes. Leverage the power of AI to create customized legal agreements with just a click of a button.
+              Generate professional, standardised legal drafts within 5 minutes. Lawyer-drafted agreements with just a click of a button.
             </p>
             <div className="flex gap-4">
               <a

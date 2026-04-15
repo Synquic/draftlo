@@ -49,7 +49,7 @@ export default async function RefundPolicy() {
                 <li>Change of mind after downloading or accessing the document</li>
                 <li>Failure to read the document description before purchase</li>
                 <li>Dissatisfaction with the content after the document has been accessed</li>
-                <li>Inability to customize the document to your specific needs</li>
+                <li>Inability to use the standardised document for your specific needs</li>
                 <li>Legal advice not being provided (as we clearly state we do not provide legal advice)</li>
                 <li>Any issues arising from the use of the document without legal review</li>
               </ul>
