@@ -80,6 +80,10 @@ export default function AgreementPageClient({
                 </li>
                 <li className="flex items-start">
                   <span className="text-green-600 mr-2 mt-0.5 flex-shrink-0">✓</span>
+                  <span>Delivered to the email you enter on the next screen</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-green-600 mr-2 mt-0.5 flex-shrink-0">✓</span>
                   <span>
                     Aligned with the Indian Contract Act, 1872 and IT Act, 2000
                     and the Rules thereunder
