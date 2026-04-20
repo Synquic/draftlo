@@ -76,7 +76,7 @@ export default function AgreementPageClient({
               <ul className="mb-6 space-y-2.5 text-base font-semibold text-gray-900">
                 <li className="flex items-start">
                   <span className="text-green-600 mr-2 mt-0.5 flex-shrink-0 font-bold">✓</span>
-                  <span>Editable Word emailed within 1 minute</span>
+                  <span>Editable Word doc emailed within 1 minute</span>
                 </li>
                 <li className="flex items-start">
                   <span className="text-green-600 mr-2 mt-0.5 flex-shrink-0 font-bold">✓</span>
@@ -85,8 +85,8 @@ export default function AgreementPageClient({
                 <li className="flex items-start">
                   <span className="text-green-600 mr-2 mt-0.5 flex-shrink-0 font-bold">✓</span>
                   <span>
-                    Aligned with the Indian Contract Act, 1872 and IT Act, 2000
-                    and the Rules thereunder
+                    Aligned with the Indian Contract Act, 1872, the Information
+                    Technology Act, 2000 and the Rules thereunder
                   </span>
                 </li>
               </ul>
