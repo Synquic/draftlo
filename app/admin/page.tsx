@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { FileText, FolderOpen, Menu, LogOut, Eye, DollarSign } from 'lucide-react';
+import { FileText, FolderOpen, Menu, LogOut, Eye, DollarSign, BookOpen } from 'lucide-react';
 import type { AppData } from '@/lib/api';
 
 export default function AdminDashboard() {
@@ -145,6 +145,20 @@ export default function AdminDashboard() {
           </div>
         </div>
 
+          <div className="bg-white rounded-xl shadow-sm p-6 border-l-4 border-teal-600">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-500 mb-1">Blog Posts</p>
+                <p className="text-3xl font-bold text-gray-900">{data?.blogs?.length || 0}</p>
+                <p className="text-xs text-gray-500 mt-1">Published articles</p>
+              </div>
+              <div className="w-14 h-14 bg-teal-100 rounded-full flex items-center justify-center">
+                <BookOpen className="w-7 h-7 text-teal-600" />
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* Quick Actions */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <Link
@@ -192,6 +206,22 @@ export default function AdminDashboard() {
             <h3 className="text-2xl font-bold mb-2">Manage Menu</h3>
             <p className="text-purple-100">
               Configure navigation menu items
+            </p>
+          </Link>
+
+          <Link
+            href="/admin/blogs"
+            className="bg-gradient-to-br from-teal-600 to-teal-700 rounded-xl shadow-lg p-8 text-white hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
+          >
+            <div className="flex items-center justify-between mb-4">
+              <BookOpen className="w-12 h-12" />
+              <span className="px-3 py-1 bg-white bg-opacity-20 rounded-full text-sm font-medium">
+                {data?.blogs?.length || 0}
+              </span>
+            </div>
+            <h3 className="text-2xl font-bold mb-2">Manage Blog</h3>
+            <p className="text-teal-100">
+              Create and edit blog posts and articles
             </p>
           </Link>
         </div>

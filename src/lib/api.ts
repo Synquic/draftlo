@@ -1,9 +1,10 @@
-import type { Draft, MenuItem, Category } from './schema';
+import type { Draft, MenuItem, Category, Blog } from './schema';
 
 export type AppData = {
   menu: MenuItem[];
   categories: Category[];
   drafts: Draft[];
+  blogs: Blog[];
 };
 
 export async function getAppData(): Promise<AppData> {
@@ -14,6 +15,7 @@ export async function getAppData(): Promise<AppData> {
       menu: [],
       categories: [],
       drafts: [],
+      blogs: [],
     };
   }
 
@@ -41,6 +43,7 @@ export async function getAppData(): Promise<AppData> {
       menu: [],
       categories: [],
       drafts: [],
+      blogs: [],
     };
   }
 }
