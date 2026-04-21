@@ -63,11 +63,21 @@ export default function RootLayout({
       </head>
 
       <body className="font-body antialiased min-h-screen">
+        {/* Google Tag Manager (noscript fallback) */}
+        <noscript>
+          <iframe
+            src="https://www.googletagmanager.com/ns.html?id=GTM-5JKQJWJC"
+            height="0"
+            width="0"
+            style={{ display: "none", visibility: "hidden" }}
+          />
+        </noscript>
+
         <Providers>
           <TooltipProvider>
             <Suspense fallback={null}>
               <AnalyticsProvider>
-                {/* 🔑 ROOT STRUCTURE FIX */}
+                {/* ROOT STRUCTURE FIX */}
                 <div className="flex min-h-screen flex-col overflow-x-hidden">
                   <Toaster />
                   <Sonner />
