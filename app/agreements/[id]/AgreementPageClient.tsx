@@ -39,14 +39,41 @@ export default function AgreementPageClient({
         <div className="max-w-7xl mx-auto px-6 py-12">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
 
-            {/* LEFT — IMAGE */}
-            <div className="border border-gray-200 rounded-lg p-4 bg-gray-50">
-              <img
-                src={agreement?.image}
-                alt={agreement?.name}
-                className="w-full object-contain"
-              />
-            </div>
+            {/* LEFT — PREVIEW (multi-page scrollable if previewImages exists, single image otherwise) */}
+            {agreement?.previewImages?.length > 0 ? (
+              <div
+                className="border border-gray-200 rounded-lg bg-gray-50 overflow-hidden"
+                style={{ userSelect: "none" }}
+              >
+                <div className="bg-white px-4 py-2 text-xs text-gray-500 border-b border-gray-200 flex items-center justify-between">
+                  <span>Preview ({agreement.previewImages.length} pages)</span>
+                  <span className="italic">Watermarked sample</span>
+                </div>
+                <div
+                  className="max-h-[720px] overflow-y-auto p-3 space-y-3"
+                  onContextMenu={(e) => e.preventDefault()}
+                >
+                  {agreement.previewImages.map((src: string, i: number) => (
+                    <img
+                      key={src}
+                      src={src}
+                      alt={`${agreement?.name} — page ${i + 1}`}
+                      draggable={false}
+                      onContextMenu={(e) => e.preventDefault()}
+                      className="w-full object-contain rounded border border-gray-100 shadow-sm pointer-events-none select-none"
+                    />
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <div className="border border-gray-200 rounded-lg p-4 bg-gray-50">
+                <img
+                  src={agreement?.image}
+                  alt={agreement?.name}
+                  className="w-full object-contain"
+                />
+              </div>
+            )}
 
             {/* RIGHT — CONTENT */}
             <div>

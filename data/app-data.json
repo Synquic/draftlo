@@ -176,6 +176,13 @@
         "Drafted to support startups, SMEs, and enterprises alike",
         "Applicable across multiple industries and business models",
         "Legally structured and professionally written"
+      ],
+      "previewImages": [
+        "/previews/confidentiality-agreement/page-1.jpg",
+        "/previews/confidentiality-agreement/page-2.jpg",
+        "/previews/confidentiality-agreement/page-3.jpg",
+        "/previews/confidentiality-agreement/page-4.jpg",
+        "/previews/confidentiality-agreement/page-5.jpg"
       ]
     },
     {
@@ -231,6 +238,18 @@
         "Designed for high-value professional and consulting engagements",
         "Provides comprehensive liability and confidentiality safeguards",
         "Balances flexibility with strong legal enforceability"
+      ],
+      "previewImages": [
+        "/previews/master-services-agreement/page-01.jpg",
+        "/previews/master-services-agreement/page-02.jpg",
+        "/previews/master-services-agreement/page-03.jpg",
+        "/previews/master-services-agreement/page-04.jpg",
+        "/previews/master-services-agreement/page-05.jpg",
+        "/previews/master-services-agreement/page-06.jpg",
+        "/previews/master-services-agreement/page-07.jpg",
+        "/previews/master-services-agreement/page-08.jpg",
+        "/previews/master-services-agreement/page-09.jpg",
+        "/previews/master-services-agreement/page-10.jpg"
       ]
     },
     {
@@ -318,6 +337,19 @@
         "...",
         "Governing Law and Jurisdiction",
         "Contact Information"
+      ],
+      "previewImages": [
+        "/previews/tc-general-product/page-01.jpg",
+        "/previews/tc-general-product/page-02.jpg",
+        "/previews/tc-general-product/page-03.jpg",
+        "/previews/tc-general-product/page-04.jpg",
+        "/previews/tc-general-product/page-05.jpg",
+        "/previews/tc-general-product/page-06.jpg",
+        "/previews/tc-general-product/page-07.jpg",
+        "/previews/tc-general-product/page-08.jpg",
+        "/previews/tc-general-product/page-09.jpg",
+        "/previews/tc-general-product/page-10.jpg",
+        "/previews/tc-general-product/page-11.jpg"
       ]
     },
     {
@@ -1362,7 +1394,19 @@
         "amount": 400,
         "ctaLink": "https://forms.draftlo.com/draflo/form/PrivacyPolicySPDISecureCheckout/formperma/HxDVKfclXncaaaXJzMkpkjoQug2_axxNzD0FSU3JIqk"
       },
-      "description": "Privacy Policy as per the recent DPDP Act"
+      "description": "Privacy Policy as per the recent DPDP Act",
+      "previewImages": [
+        "/previews/privacy-policy-dpdp/page-01.jpg",
+        "/previews/privacy-policy-dpdp/page-02.jpg",
+        "/previews/privacy-policy-dpdp/page-03.jpg",
+        "/previews/privacy-policy-dpdp/page-04.jpg",
+        "/previews/privacy-policy-dpdp/page-05.jpg",
+        "/previews/privacy-policy-dpdp/page-06.jpg",
+        "/previews/privacy-policy-dpdp/page-07.jpg",
+        "/previews/privacy-policy-dpdp/page-08.jpg",
+        "/previews/privacy-policy-dpdp/page-09.jpg",
+        "/previews/privacy-policy-dpdp/page-10.jpg"
+      ]
     }
   ],
   "categories": [
