@@ -1,17 +1,16 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { Layout } from '@/components/Layout';
-import { getAppData } from '@/lib/api';
+import { getAppDataServer } from '@/lib/api-server';
 
 export const dynamic = 'force-dynamic';
-export const revalidate = 60;
 
 interface Props {
   params: { slug: string };
 }
 
 export async function generateMetadata({ params }: Props) {
-  const data = await getAppData();
+  const data = getAppDataServer();
   const blog = (data.blogs || []).find((b) => b.slug === params.slug);
   if (!blog) return {};
   return {
@@ -36,7 +35,7 @@ function formatDate(dateStr: string) {
 }
 
 export default async function BlogPostPage({ params }: Props) {
-  const data = await getAppData();
+  const data = getAppDataServer();
   const blog = (data.blogs || []).find((b) => b.slug === params.slug);
 
   if (!blog) notFound();
