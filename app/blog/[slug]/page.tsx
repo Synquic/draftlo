@@ -139,7 +139,7 @@ export default async function BlogPostPage({ params }: Props) {
             Draftlo generates DPDP-aligned privacy policies, consent notices, and legal documents in minutes — affordable, plain-language, and built for Indian businesses.
           </p>
           <Link
-            href="/agreements/privacy-policy"
+            href="/agreements/privacy-policy-dpdp"
             className="inline-block px-8 py-3 bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-lg transition-colors"
           >
             Get Your Privacy Policy →
