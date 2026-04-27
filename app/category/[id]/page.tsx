@@ -1,6 +1,38 @@
 import { Layout } from "@/components/Layout";
 import { AgreementCard } from "@/components/AgreementCard";
 import { getAppData } from "@/lib/api";
+import type { Metadata } from "next";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const data = await getAppData();
+  const { id } = await params;
+  const categoryPath = `/category/${id}`;
+  const category = data.categories.find((cat) => cat.href === categoryPath);
+  const categoryName =
+    category?.name ||
+    id.replace(/-/g, " ").replace(/\b\w/g, (l) => l.toUpperCase());
+  const url = `https://draftlo.com/category/${id}`;
+
+  return {
+    title: `${categoryName} India – Download Legal Templates | Draftlo`,
+    description:
+      category?.description ||
+      `Download ready-to-use ${categoryName.toLowerCase()} legal agreements in India. Professionally drafted, legally compliant templates starting at ₹250.`,
+    alternates: { canonical: url },
+    openGraph: {
+      title: `${categoryName} India – Legal Templates | Draftlo`,
+      description:
+        category?.description ||
+        `Ready-to-use ${categoryName.toLowerCase()} legal agreements in India. Starting at ₹250.`,
+      url,
+      type: "website",
+    },
+  };
+}
 
 export default async function CategoryPage({ params }: { params: Promise<{ id: string }> }) {
   const data = await getAppData();
