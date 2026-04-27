@@ -22,24 +22,41 @@ const inter = Inter({
 });
 
 export const metadata = {
-  title: "Draftlo - Generate Legal Drafts within 5 Minutes",
+  title: "Draftlo – Legal Agreements India | Ready Drafts in 5 Minutes",
   description:
-    "Generate professional legal drafts within 5 minutes. Rental agreements, employment contracts, NDAs, and more. Fast, easy, and legally compliant.",
+    "Get legally compliant legal agreements in India instantly. Rental agreements, NDAs, employment contracts, T&Cs, power of attorney and more. Starting at ₹250.",
   keywords:
-    "legal drafts, rental agreement, employment contract, NDA, legal templates, power of attorney",
+    "legal agreements India, legal drafts India, rental agreement India, employment contract India, NDA India, legal templates India, power of attorney India",
+  alternates: {
+    canonical: "https://draftlo.com",
+  },
   verification: {
     other: {
       "facebook-domain-verification": "dsqs8e04v4yuy5thze53mpqpkc92nc",
     },
   },
   openGraph: {
-    title: "Draftlo - Generate Legal Drafts within 5 Minutes",
+    title: "Draftlo – Legal Agreements India | Ready Drafts in 5 Minutes",
     description:
-      "Generate professional legal drafts within 5 minutes. Fast, easy, and legally compliant.",
+      "Get legally compliant legal agreements in India instantly. Rental agreements, NDAs, employment contracts and more. Starting at ₹250.",
     type: "website",
+    url: "https://draftlo.com",
+    siteName: "Draftlo",
+    images: [
+      {
+        url: "https://draftlo.com/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Draftlo – Legal Agreements India",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
+    title: "Draftlo – Legal Agreements India | Ready Drafts in 5 Minutes",
+    description:
+      "Get legally compliant legal agreements in India instantly. Starting at ₹250.",
+    images: ["https://draftlo.com/og-image.png"],
   },
 };
 
@@ -60,24 +77,37 @@ export default function RootLayout({
 
         {/* Google Tag Manager */}
         <GoogleTagManager />
+
+        {/* JSON-LD Organization Schema */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              name: "Draftlo",
+              url: "https://draftlo.com",
+              logo: "https://draftlo.com/og-image.png",
+              description:
+                "Draftlo provides legally compliant legal agreements in India including rental agreements, NDAs, employment contracts, and more.",
+              sameAs: [],
+              contactPoint: {
+                "@type": "ContactPoint",
+                contactType: "customer service",
+                areaServed: "IN",
+                availableLanguage: "English",
+              },
+            }),
+          }}
+        />
       </head>
 
       <body className="font-body antialiased min-h-screen">
-        {/* Google Tag Manager (noscript fallback) */}
-        <noscript>
-          <iframe
-            src="https://www.googletagmanager.com/ns.html?id=GTM-5JKQJWJC"
-            height="0"
-            width="0"
-            style={{ display: "none", visibility: "hidden" }}
-          />
-        </noscript>
-
         <Providers>
           <TooltipProvider>
             <Suspense fallback={null}>
               <AnalyticsProvider>
-                {/* ROOT STRUCTURE FIX */}
+                {/* 🔑 ROOT STRUCTURE FIX */}
                 <div className="flex min-h-screen flex-col overflow-x-hidden">
                   <Toaster />
                   <Sonner />
