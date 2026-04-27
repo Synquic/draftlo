@@ -44,6 +44,51 @@ export default async function BlogPostPage({ params }: Props) {
 
   return (
     <Layout data={data}>
+      <style>{`
+        .blog-content p {
+          margin-bottom: 2rem;
+          line-height: 1.9;
+          color: #374151;
+          font-size: 1.0625rem;
+        }
+        .blog-content h2 {
+          font-size: 1.5rem;
+          font-weight: 700;
+          color: #111827;
+          margin-top: 3.5rem;
+          margin-bottom: 1.25rem;
+          padding-bottom: 0.75rem;
+          border-bottom: 1px solid #e5e7eb;
+        }
+        .blog-content h3 {
+          font-size: 1.2rem;
+          font-weight: 600;
+          color: #1e40af;
+          margin-top: 2.5rem;
+          margin-bottom: 1rem;
+        }
+        .blog-content ul {
+          margin: 1.5rem 0 2rem 0;
+          padding-left: 1.75rem;
+          list-style-type: disc;
+        }
+        .blog-content li {
+          margin-bottom: 0.75rem;
+          line-height: 1.75;
+          color: #374151;
+        }
+        .blog-content strong { color: #111827; font-weight: 600; }
+        .blog-content blockquote {
+          border-left: 4px solid #2563eb;
+          background: #eff6ff;
+          padding: 1rem 1.5rem;
+          border-radius: 0 0.5rem 0.5rem 0;
+          margin: 2rem 0;
+          color: #374151;
+        }
+        .blog-content hr { margin: 2.5rem 0; border-color: #e5e7eb; }
+      `}</style>
+
       {/* Top nav breadcrumb */}
       <div className="bg-gray-50 border-b border-gray-200 px-4 py-3 text-sm text-gray-500">
         <div className="max-w-3xl mx-auto">
@@ -83,17 +128,7 @@ export default async function BlogPostPage({ params }: Props) {
 
         {/* Content */}
         <div
-          className="prose prose-lg prose-gray max-w-none
-            prose-headings:font-bold prose-headings:text-gray-900
-            prose-h2:text-2xl prose-h2:mt-14 prose-h2:mb-6 prose-h2:border-b prose-h2:border-gray-200 prose-h2:pb-3
-            prose-h3:text-xl prose-h3:mt-10 prose-h3:mb-4 prose-h3:text-blue-800
-            prose-p:text-gray-700 prose-p:leading-loose prose-p:mb-7
-            prose-ul:my-6 prose-li:text-gray-700 prose-li:mb-3
-            prose-strong:text-gray-900
-            prose-blockquote:border-l-4 prose-blockquote:border-blue-600
-            prose-blockquote:bg-blue-50 prose-blockquote:px-6 prose-blockquote:py-4
-            prose-blockquote:rounded-r-lg prose-blockquote:text-gray-700 prose-blockquote:not-italic
-            prose-hr:my-10 prose-em:text-gray-500"
+          className="blog-content"
           dangerouslySetInnerHTML={{ __html: blog.content }}
         />
 
