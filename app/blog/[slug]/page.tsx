@@ -6,12 +6,13 @@ import { getAppDataServer } from '@/lib/api-server';
 export const dynamic = 'force-dynamic';
 
 interface Props {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }
 
 export async function generateMetadata({ params }: Props) {
+  const { slug } = await params;
   const data = getAppDataServer();
-  const blog = (data.blogs || []).find((b) => b.slug === params.slug);
+  const blog = (data.blogs || []).find((b) => b.slug === slug);
   if (!blog) return {};
   return {
     title: `${blog.title} | Draftlo Blog`,
@@ -35,8 +36,9 @@ function formatDate(dateStr: string) {
 }
 
 export default async function BlogPostPage({ params }: Props) {
+  const { slug } = await params;
   const data = getAppDataServer();
-  const blog = (data.blogs || []).find((b) => b.slug === params.slug);
+  const blog = (data.blogs || []).find((b) => b.slug === slug);
 
   if (!blog) notFound();
 
