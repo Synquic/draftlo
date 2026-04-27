@@ -8,15 +8,19 @@ export type AppData = {
 };
 
 export async function getAppData(): Promise<AppData> {
-  // Server-side: use localhost so the container can reach its own API
-  // (public domain is unreachable from inside Docker)
-  // Client-side: use a relative URL
+  if (typeof window === 'undefined' && process.env.NODE_ENV === 'production' && !process.env.NEXT_PUBLIC_BASE_URL) {
+    return { menu: [], categories: [], drafts: [], blogs: [] };
+  }
+
   const isServer = typeof window === 'undefined';
-  const baseUrl = isServer ? 'http://localhost:3000' : '';
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || (isServer ? 'http://localhost:3000' : '');
 
   try {
-    const res = await fetch(`${baseUrl}/api/data`, { cache: 'no-store' });
-    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const res = await fetch(`${baseUrl}/api/data`, {
+      next: { revalidate: 60 },
+      cache: 'no-store',
+    });
+    if (!res.ok) throw new Error('Failed to fetch');
     return await res.json();
   } catch (error) {
     console.error('Failed to fetch app data:', error);
