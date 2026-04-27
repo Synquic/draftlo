@@ -1,9 +1,8 @@
 import Link from 'next/link';
 import { Layout } from '@/components/Layout';
-import { getAppData } from '@/lib/api';
+import { getAppDataServer } from '@/lib/api-server';
 
 export const dynamic = 'force-dynamic';
-export const revalidate = 60;
 
 export const metadata = {
   title: 'Blog | Draftlo — Legal Insights for Indian Businesses',
@@ -19,7 +18,7 @@ function formatDate(dateStr: string) {
 }
 
 export default async function BlogListPage() {
-  const data = await getAppData();
+  const data = getAppDataServer();
   const blogs = (data.blogs || []).slice().sort(
     (a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
   );
