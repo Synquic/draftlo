@@ -1,9 +1,8 @@
 'use client';
-
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { FileText, FolderOpen, Menu, LogOut, Eye, DollarSign, BookOpen } from 'lucide-react';
+import { FileText, FolderOpen, Menu, LogOut, Eye, DollarSign } from 'lucide-react';
 import type { AppData } from '@/lib/api';
 
 export default function AdminDashboard() {
@@ -18,7 +17,6 @@ export default function AdminDashboard() {
       router.push('/admin/login');
       return;
     }
-
     setIsAuthenticated(true);
     fetchData();
   }, [router]);
@@ -135,25 +133,11 @@ export default function AdminDashboard() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-500 mb-1">Avg. Price</p>
-                <p className="text-3xl font-bold text-gray-900">₹{Math.round(avgPrice)}</p>
+                <p className="text-3xl font-bold text-gray-900">&#8377;{Math.round(avgPrice)}</p>
                 <p className="text-xs text-gray-500 mt-1">Per document</p>
               </div>
               <div className="w-14 h-14 bg-orange-100 rounded-full flex items-center justify-center">
                 <DollarSign className="w-7 h-7 text-orange-600" />
-              </div>
-            </div>
-          </div>
-        </div>
-
-          <div className="bg-white rounded-xl shadow-sm p-6 border-l-4 border-teal-600">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-500 mb-1">Blog Posts</p>
-                <p className="text-3xl font-bold text-gray-900">{data?.blogs?.length || 0}</p>
-                <p className="text-xs text-gray-500 mt-1">Published articles</p>
-              </div>
-              <div className="w-14 h-14 bg-teal-100 rounded-full flex items-center justify-center">
-                <BookOpen className="w-7 h-7 text-teal-600" />
               </div>
             </div>
           </div>
@@ -208,22 +192,6 @@ export default function AdminDashboard() {
               Configure navigation menu items
             </p>
           </Link>
-
-          <Link
-            href="/admin/blogs"
-            className="bg-gradient-to-br from-teal-600 to-teal-700 rounded-xl shadow-lg p-8 text-white hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
-          >
-            <div className="flex items-center justify-between mb-4">
-              <BookOpen className="w-12 h-12" />
-              <span className="px-3 py-1 bg-white bg-opacity-20 rounded-full text-sm font-medium">
-                {data?.blogs?.length || 0}
-              </span>
-            </div>
-            <h3 className="text-2xl font-bold mb-2">Manage Blog</h3>
-            <p className="text-teal-100">
-              Create and edit blog posts and articles
-            </p>
-          </Link>
         </div>
 
         {/* Recent Content */}
@@ -237,7 +205,7 @@ export default function AdminDashboard() {
                   href="/admin/drafts"
                   className="text-sm text-blue-600 hover:text-blue-700 font-medium"
                 >
-                  View All →
+                  View All &#8594;
                 </Link>
               </div>
             </div>
@@ -253,7 +221,7 @@ export default function AdminDashboard() {
                       />
                       <div className="flex-1 min-w-0">
                         <p className="font-medium text-gray-900 truncate">{draft.name}</p>
-                        <p className="text-sm text-gray-500">₹{draft.price?.amount}</p>
+                        <p className="text-sm text-gray-500">&#8377;{draft.price?.amount}</p>
                       </div>
                     </div>
                     <Link
@@ -283,7 +251,7 @@ export default function AdminDashboard() {
                   href="/admin/categories"
                   className="text-sm text-green-600 hover:text-green-700 font-medium"
                 >
-                  Manage →
+                  Manage &#8594;
                 </Link>
               </div>
             </div>
