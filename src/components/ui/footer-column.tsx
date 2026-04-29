@@ -18,7 +18,7 @@ export default function FooterColumn() {
               />
             </div>
             <p className="text-gray-400 text-sm leading-relaxed">
-              Generate professional, standardised legal drafts within 5 minutes. Lawyer-drafted agreements with just a click of a button.
+              Generate professional legal drafts within 5 minutes. Leverage the power of AI to create customized legal agreements with just a click of a button.
             </p>
             <div className="flex gap-4">
               <a
@@ -63,6 +63,11 @@ export default function FooterColumn() {
               <li>
                 <Link href="/how-it-works" className="text-gray-400 hover:text-white transition-colors text-sm">
                   How It Works
+                </Link>
+              </li>
+              <li>
+                <Link href="/faq" className="text-gray-400 hover:text-white transition-colors text-sm">
+                  FAQ
                 </Link>
               </li>
             </ul>
@@ -134,12 +139,4 @@ export default function FooterColumn() {
 
       {/* Copyright */}
       <div className="border-t border-gray-700">
-        <div className="container mx-auto px-4 py-6">
-          <p className="text-center text-sm text-gray-400">
-            © 2025 Draftlo. All rights reserved.
-          </p>
-        </div>
-      </div>
-    </footer>
-  );
-}
+        <div className="container mx-au
