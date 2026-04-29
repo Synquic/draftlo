@@ -26,6 +26,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.8,
     },
     {
+      url: `${base}/faq`,
+      lastModified: now,
+      changeFrequency: "monthly",
+      priority: 0.9,
+    },
+    {
       url: `${base}/how-it-works`,
       lastModified: now,
       changeFrequency: "monthly",
@@ -49,9 +55,4 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const agreementPages: MetadataRoute.Sitemap = data.drafts.map((draft) => ({
     url: `${base}${draft.href}`,
     lastModified: now,
-    changeFrequency: "monthly" as const,
-    priority: 0.75,
-  }));
-
-  return [...staticPages, ...categoryPages, ...agreementPages];
-}
+    changeFreque
