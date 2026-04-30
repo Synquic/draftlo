@@ -9,14 +9,17 @@ export default function SuccessPage() {
   const searchParams = useSearchParams();
 
   useEffect(() => {
-    // Get purchase details from URL params
     const productName = searchParams?.get('product') || 'Legal Draft';
     const price = parseFloat(searchParams?.get('price') || '0');
     const productId = searchParams?.get('id') || '';
     const category = searchParams?.get('category') || 'Uncategorized';
 
-    // Generate a unique event ID for deduplication between browser pixel and server-side Conversions API
-    const eventId = `purchase_${productId || 'draft'}_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+    // Use Razorpay payment ID from URL if present (matches the webhook event ID for deduplication)
+    // Razorpay appends ?razorpay_payment_id=pay_xxx to the success redirect URL
+    const razorpayPaymentId = searchParams?.get('razorpay_payment_id');
+    const eventId = razorpayPaymentId
+      ? `rzp_${razorpayPaymentId}`
+      : `purchase_${productId || 'draft'}_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
 
     // Track Purchase event to Facebook Pixel (browser-side)
     if (typeof window !== 'undefined' && (window as any).fbq) {
