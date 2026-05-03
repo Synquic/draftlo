@@ -55,4 +55,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const agreementPages: MetadataRoute.Sitemap = data.drafts.map((draft) => ({
     url: `${base}${draft.href}`,
     lastModified: now,
-    changeFreque
+    changeFrequency: "monthly" as const,
+    priority: 0.75,
+  }));
+
+  return [...staticPages, ...categoryPages, ...agreementPages];
+}
