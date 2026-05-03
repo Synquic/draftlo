@@ -35,9 +35,9 @@ export default function AgreementPageClient({
   const handleGetDraftClick = (
     e: React.MouseEvent<HTMLAnchorElement>
   ) => {
-    e.preventDefault(); // ⛔ stop instant navigation
+    e.preventDefault();
 
-    const eventId = crypto.randomUUID(); // 🔑 deduplication key
+    const eventId = crypto.randomUUID();
 
     analytics.trackFormRedirect({
       documentName: agreement.name,
@@ -48,7 +48,6 @@ export default function AgreementPageClient({
       eventId,
     });
 
-    // ✅ allow Meta Pixel + CAPI to flush
     setTimeout(() => {
       window.open(agreement.price.ctaLink, "_blank");
     }, 300);
@@ -160,4 +159,44 @@ export default function AgreementPageClient({
               )}
 
               {/* KEY DIFFERENTIATORS */}
-              {agreement?.keyDiffere
+              {agreement?.keyDifferentiators?.length > 0 && (
+                <p className="mb-4 text-gray-700">
+                  <strong className="text-gray-900">
+                    Key Differentiator:{" "}
+                  </strong>
+                  {agreement.keyDifferentiators.join(", ")}
+                </p>
+              )}
+
+              {/* TABLE OF CONTENTS */}
+              {agreement?.tableOfContents?.length > 0 && (
+                <>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                    Table of Contents
+                  </h3>
+                  <ul className="list-disc pl-6 text-gray-700">
+                    {agreement.tableOfContents.map(
+                      (item: string, i: number) => (
+                        <li key={i}>{item}</li>
+                      )
+                    )}
+                  </ul>
+                </>
+              )}
+
+              {/* DISCLAIMER */}
+              {agreement?.disclaimer && (
+                <p className="mt-6 text-gray-700 text-sm border-t border-gray-200 pt-4 font-semibold">
+                  <strong className="text-gray-900">Disclaimer:</strong>{" "}
+                  {agreement.disclaimer}
+                </p>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <Footer />
+    </>
+  );
+}
