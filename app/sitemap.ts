@@ -1,8 +1,23 @@
 import { MetadataRoute } from "next";
-import { getAppData } from "@/lib/api";
+import fs from "fs";
+import path from "path";
+
+export const dynamic = "force-dynamic";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const data = await getAppData();
+  let categories: { href: string }[] = [];
+  let drafts: { href: string }[] = [];
+
+  try {
+    const DATA_FILE = path.join(process.cwd(), "data", "app-data.json");
+    const fileContent = fs.readFileSync(DATA_FILE, "utf-8");
+    const data = JSON.parse(fileContent);
+    categories = data.categories || [];
+    drafts = data.drafts || [];
+  } catch (error) {
+    console.error("Error reading app data for sitemap:", error);
+  }
+
   const base = "https://draftlo.com";
   const now = new Date();
 
@@ -16,14 +31,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${base}/about`, lastModified: now, changeFrequency: "monthly", priority: 0.5 },
   ];
 
-  const categoryPages: MetadataRoute.Sitemap = data.categories.map((cat) => ({
+  const categoryPages: MetadataRoute.Sitemap = categories.map((cat) => ({
     url: `${base}${cat.href}`,
     lastModified: now,
     changeFrequency: "weekly" as const,
     priority: 0.85,
   }));
 
-  const agreementPages: MetadataRoute.Sitemap = data.drafts.map((draft) => ({
+  const agreementPages: MetadataRoute.Sitemap = drafts.map((draft) => ({
     url: `${base}${draft.href}`,
     lastModified: now,
     changeFrequency: "monthly" as const,
