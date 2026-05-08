@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import NewNavbar from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { analytics } from "@/lib/analytics";
@@ -10,13 +10,9 @@ interface AgreementPageProps {
   data: any;
 }
 
-/** Loads the Razorpay checkout script once */
 function loadRazorpayScript(): Promise<boolean> {
   return new Promise((resolve) => {
-    if (typeof (window as any).Razorpay !== 'undefined') {
-      resolve(true);
-      return;
-    }
+    if (typeof (window as any).Razorpay !== 'undefined') { resolve(true); return; }
     const script = document.createElement('script');
     script.src = 'https://checkout.razorpay.com/v1/checkout.js';
     script.onload = () => resolve(true);
@@ -25,12 +21,12 @@ function loadRazorpayScript(): Promise<boolean> {
   });
 }
 
-export default function AgreementPageClient({
-  agreement,
-  data,
-}: AgreementPageProps) {
+export default function AgreementPageClient({ agreement, data }: AgreementPageProps) {
+  const [showForm, setShowForm] = useState(false);
+  const [formData, setFormData] = useState({ name: '', email: '', phone: '' });
+  const [formErrors, setFormErrors] = useState({ name: '', email: '', phone: '' });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  /** Track ViewContent on page load */
   useEffect(() => {
     if (!agreement) return;
     analytics.trackDocumentView({
@@ -41,9 +37,29 @@ export default function AgreementPageClient({
     });
   }, [agreement]);
 
-  /** Open Razorpay modal on button click */
-  const handlePayment = async (e: React.MouseEvent<HTMLButtonElement>) => {
+  const validateForm = () => {
+    const errors = { name: '', email: '', phone: '' };
+    let valid = true;
+    if (!formData.name.trim()) { errors.name = 'Name is required'; valid = false; }
+    if (!formData.email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      errors.email = 'Valid email is required'; valid = false;
+    }
+    if (!formData.phone.trim() || !/^[6-9]\d{9}$/.test(formData.phone.replace(/\s/g, ''))) {
+      errors.phone = 'Valid 10-digit mobile number required'; valid = false;
+    }
+    setFormErrors(errors);
+    return valid;
+  };
+
+  const handleGetDraftClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+    setShowForm(true);
+  };
+
+  const handleFormSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!validateForm()) return;
+    setIsSubmitting(true);
 
     const eventId = crypto.randomUUID();
     analytics.trackFormRedirect({
@@ -58,6 +74,7 @@ export default function AgreementPageClient({
     const loaded = await loadRazorpayScript();
     if (!loaded) {
       alert('Failed to load payment gateway. Please refresh and try again.');
+      setIsSubmitting(false);
       return;
     }
 
@@ -70,7 +87,7 @@ export default function AgreementPageClient({
           amount: agreement.price.amount,
           currency: 'INR',
           receipt: `rcpt_${Date.now()}`,
-          notes: { product: agreement.name, href: agreement.href },
+          notes: { product: agreement.name, href: agreement.href, email: formData.email, name: formData.name },
         }),
       });
       if (!res.ok) throw new Error('Order creation failed');
@@ -78,8 +95,12 @@ export default function AgreementPageClient({
     } catch (err) {
       console.error('Razorpay order error:', err);
       alert('Could not initiate payment. Please try again.');
+      setIsSubmitting(false);
       return;
     }
+
+    setShowForm(false);
+    setIsSubmitting(false);
 
     const options = {
       key: order.key_id,
@@ -89,6 +110,11 @@ export default function AgreementPageClient({
       description: agreement.name,
       image: '/logoimage.png',
       order_id: order.id,
+      prefill: {
+        name: formData.name,
+        email: formData.email,
+        contact: formData.phone,
+      },
       handler: function (response: any) {
         const params = new URLSearchParams({
           razorpay_payment_id: response.razorpay_payment_id,
@@ -100,7 +126,6 @@ export default function AgreementPageClient({
         });
         window.location.href = `/thankyou-redirect?${params.toString()}`;
       },
-      prefill: {},
       theme: { color: '#000000' },
       modal: { ondismiss: function () { console.log('Razorpay modal closed'); } },
     };
@@ -112,6 +137,71 @@ export default function AgreementPageClient({
   return (
     <>
       <NewNavbar data={data} />
+
+      {/* Pre-checkout form overlay */}
+      {showForm && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
+          <div className="bg-white rounded-xl shadow-2xl w-full max-w-md p-8">
+            <h2 className="text-xl font-semibold text-gray-900 mb-1">Enter your details</h2>
+            <p className="text-sm text-gray-500 mb-6">We'll send your draft to this email after payment.</p>
+
+            <form onSubmit={handleFormSubmit} noValidate>
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                <input
+                  type="text"
+                  placeholder="Ravi Shankar"
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black"
+                />
+                {formErrors.name && <p className="text-red-500 text-xs mt-1">{formErrors.name}</p>}
+              </div>
+
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+                <input
+                  type="email"
+                  placeholder="you@example.com"
+                  value={formData.email}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black"
+                />
+                {formErrors.email && <p className="text-red-500 text-xs mt-1">{formErrors.email}</p>}
+              </div>
+
+              <div className="mb-6">
+                <label className="block text-sm font-medium text-gray-700 mb-1">Mobile Number</label>
+                <input
+                  type="tel"
+                  placeholder="9876543210"
+                  value={formData.phone}
+                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                  className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black"
+                />
+                {formErrors.phone && <p className="text-red-500 text-xs mt-1">{formErrors.phone}</p>}
+              </div>
+
+              <div className="flex gap-3">
+                <button
+                  type="button"
+                  onClick={() => setShowForm(false)}
+                  className="flex-1 border border-gray-300 text-gray-700 px-4 py-2 rounded-md text-sm hover:bg-gray-50 transition"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="flex-1 bg-black text-white px-4 py-2 rounded-md text-sm hover:bg-gray-800 transition disabled:opacity-50"
+                >
+                  {isSubmitting ? 'Please wait...' : `Pay ₹${agreement?.price?.amount}`}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
 
       <div className="min-h-screen bg-white">
         <div className="max-w-7xl mx-auto px-6 py-12">
@@ -142,7 +232,7 @@ export default function AgreementPageClient({
                 <p className="text-2xl font-semibold text-gray-900 mb-3">
                   ₹{agreement?.price?.amount?.toLocaleString("en-IN", { minimumFractionDigits: 2 })}
                 </p>
-                <button onClick={handlePayment} className="inline-block bg-black text-white px-6 py-2 rounded-md hover:bg-gray-800 transition cursor-pointer">
+                <button onClick={handleGetDraftClick} className="inline-block bg-black text-white px-6 py-2 rounded-md hover:bg-gray-800 transition cursor-pointer">
                   Get Draft @ ₹{agreement?.price?.amount}
                 </button>
               </div>
@@ -192,4 +282,4 @@ export default function AgreementPageClient({
       <Footer />
     </>
   );
-    }
+      }
