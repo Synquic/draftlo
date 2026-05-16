@@ -1,5 +1,4 @@
 'use client';
-
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
@@ -18,7 +17,6 @@ export default function AdminDashboard() {
       router.push('/admin/login');
       return;
     }
-
     setIsAuthenticated(true);
     fetchData();
   }, [router]);
@@ -135,7 +133,7 @@ export default function AdminDashboard() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-500 mb-1">Avg. Price</p>
-                <p className="text-3xl font-bold text-gray-900">₹{Math.round(avgPrice)}</p>
+                <p className="text-3xl font-bold text-gray-900">&#8377;{Math.round(avgPrice)}</p>
                 <p className="text-xs text-gray-500 mt-1">Per document</p>
               </div>
               <div className="w-14 h-14 bg-orange-100 rounded-full flex items-center justify-center">
@@ -207,7 +205,7 @@ export default function AdminDashboard() {
                   href="/admin/drafts"
                   className="text-sm text-blue-600 hover:text-blue-700 font-medium"
                 >
-                  View All →
+                  View All &#8594;
                 </Link>
               </div>
             </div>
@@ -223,7 +221,7 @@ export default function AdminDashboard() {
                       />
                       <div className="flex-1 min-w-0">
                         <p className="font-medium text-gray-900 truncate">{draft.name}</p>
-                        <p className="text-sm text-gray-500">₹{draft.price?.amount}</p>
+                        <p className="text-sm text-gray-500">&#8377;{draft.price?.amount}</p>
                       </div>
                     </div>
                     <Link
@@ -253,7 +251,7 @@ export default function AdminDashboard() {
                   href="/admin/categories"
                   className="text-sm text-green-600 hover:text-green-700 font-medium"
                 >
-                  Manage →
+                  Manage &#8594;
                 </Link>
               </div>
             </div>

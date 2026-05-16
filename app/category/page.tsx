@@ -87,7 +87,7 @@ export default async function CategoriesPage() {
               </div>
               <h3 className="text-lg font-semibold text-gray-900 mb-2">Instant Access</h3>
               <p className="text-gray-600 text-sm">
-                Get your documents immediately after purchase, ready to customize
+                Get your standardised documents immediately after purchase, ready to use
               </p>
             </div>
 

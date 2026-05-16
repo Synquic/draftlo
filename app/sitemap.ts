@@ -7,36 +7,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
 
   const staticPages: MetadataRoute.Sitemap = [
-    {
-      url: base,
-      lastModified: now,
-      changeFrequency: "daily",
-      priority: 1.0,
-    },
-    {
-      url: `${base}/legal-agreements-india`,
-      lastModified: now,
-      changeFrequency: "weekly",
-      priority: 0.95,
-    },
-    {
-      url: `${base}/category`,
-      lastModified: now,
-      changeFrequency: "weekly",
-      priority: 0.8,
-    },
-    {
-      url: `${base}/how-it-works`,
-      lastModified: now,
-      changeFrequency: "monthly",
-      priority: 0.6,
-    },
-    {
-      url: `${base}/about`,
-      lastModified: now,
-      changeFrequency: "monthly",
-      priority: 0.5,
-    },
+    { url: base, lastModified: now, changeFrequency: "daily", priority: 1.0 },
+    { url: `${base}/legal-agreements-india`, lastModified: now, changeFrequency: "weekly", priority: 0.95 },
+    { url: `${base}/category`, lastModified: now, changeFrequency: "weekly", priority: 0.8 },
+    { url: `${base}/faq`, lastModified: now, changeFrequency: "monthly", priority: 0.9 },
+    { url: `${base}/blog`, lastModified: now, changeFrequency: "weekly", priority: 0.8 },
+    { url: `${base}/how-it-works`, lastModified: now, changeFrequency: "monthly", priority: 0.6 },
+    { url: `${base}/about`, lastModified: now, changeFrequency: "monthly", priority: 0.5 },
   ];
 
   const categoryPages: MetadataRoute.Sitemap = data.categories.map((cat) => ({

@@ -40,10 +40,22 @@ export interface Draft {
   Note?: string;
 }
 
+export interface Blog {
+  slug: string;
+  title: string;
+  metaDescription: string;
+  publishedAt: string;
+  author: string;
+  coverImage?: string;
+  content: string; // HTML string
+  tags?: string[];
+}
+
 export interface AppDataSchema {
   menu: MenuItem[];
   categories: Category[];
   drafts: Draft[];
+  blogs: Blog[];
 }
 
 // Validation functions

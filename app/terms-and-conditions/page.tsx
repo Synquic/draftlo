@@ -38,7 +38,7 @@ export default async function TermsAndConditions() {
               <p className="text-gray-700 mb-4">Permission is granted to download and use the documents purchased from Draftlo for personal or business use subject to the following conditions:</p>
               <ul className="list-disc pl-6 text-gray-700 mb-6 space-y-2">
                 <li>Documents may not be resold, redistributed, or used to create derivative works for commercial purposes</li>
-                <li>You may customize the documents for your specific needs</li>
+                <li>You may use the standardised documents for your specific needs</li>
                 <li>You may not remove any copyright or proprietary notices from the documents</li>
                 <li>This license shall automatically terminate if you violate any of these restrictions</li>
               </ul>
