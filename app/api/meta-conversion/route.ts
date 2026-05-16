@@ -25,6 +25,9 @@ export async function POST(req: NextRequest) {
       phone,
       value,
       currency = "INR",
+      contentName,
+      contentCategory,
+      contentIds,
     } = body;
 
     if (!eventName || !eventId) {
@@ -39,7 +42,7 @@ export async function POST(req: NextRequest) {
         {
           event_name: eventName,
           event_time: Math.floor(Date.now() / 1000),
-          event_id: eventId, // 🔑 Deduplication key
+          event_id: eventId, // Deduplication key - must match browser pixel eventID
           action_source: "website",
 
           user_data: {
@@ -50,6 +53,10 @@ export async function POST(req: NextRequest) {
           custom_data: {
             value,
             currency,
+            content_name: contentName,
+            content_category: contentCategory,
+            content_ids: contentIds,
+            content_type: "product",
           },
         },
       ],

@@ -105,7 +105,7 @@ export default async function ShippingPolicy() {
               <div className="bg-green-50 border border-green-200 rounded-lg p-6 mt-8">
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">Why Digital Delivery?</h3>
                 <p className="text-gray-700">
-                  Digital delivery allows us to provide you with instant access to your legal documents, eliminates shipping costs and delays, and ensures you receive the most up-to-date versions of our templates. It's also environmentally friendly and allows for easy customization and reprinting as needed.
+                  Digital delivery allows us to provide you with instant access to your legal documents, eliminates shipping costs and delays, and ensures you receive the most up-to-date versions of our templates. It's also environmentally friendly and provides standardised, ready-to-use templates and allows for easy reprinting as needed.
                 </p>
               </div>
             </div>

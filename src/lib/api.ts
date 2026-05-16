@@ -1,84 +1,39 @@
-import type { Draft, MenuItem, Category } from './schema';
+import type { Draft, MenuItem, Category, Blog } from './schema';
 
 export type AppData = {
   menu: MenuItem[];
   categories: Category[];
   drafts: Draft[];
+  blogs: Blog[];
 };
 
 export async function getAppData(): Promise<AppData> {
-  // During build time, return empty data to prevent fetch errors
-  // Pages will be regenerated at runtime with actual data
   if (typeof window === 'undefined' && process.env.NODE_ENV === 'production' && !process.env.NEXT_PUBLIC_BASE_URL) {
-    return {
-      menu: [],
-      categories: [],
-      drafts: [],
-    };
+    return { menu: [], categories: [], drafts: [], blogs: [] };
   }
 
-  // At runtime, fetch from the API
-  // Use relative URL for client-side, absolute for server-side
   const isServer = typeof window === 'undefined';
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || (isServer ? 'http://localhost:3000' : '');
 
   try {
     const res = await fetch(`${baseUrl}/api/data`, {
-      // Revalidate every 60 seconds
       next: { revalidate: 60 },
-      cache: 'no-store', // Don't cache during development
+      cache: 'no-store',
     });
-
-    if (!res.ok) {
-      throw new Error(`Failed to fetch data: ${res.status}`);
-    }
-
-    const data = await res.json();
-    return data;
+    if (!res.ok) throw new Error('Failed to fetch');
+    return await res.json();
   } catch (error) {
     console.error('Failed to fetch app data:', error);
-    return {
-      menu: [],
-      categories: [],
-      drafts: [],
-    };
+    return { menu: [], categories: [], drafts: [], blogs: [] };
   }
 }
 
-// Function to update app data (for admin portal)
 export async function updateAppData(data: AppData): Promise<{ success: boolean; message: string }> {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
-
-  const res = await fetch(`${baseUrl}/api/data`, {
+  const res = await fetch('/api/data', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data),
   });
-
-  if (!res.ok) {
-    throw new Error("Failed to update data");
-  }
-
-  return res.json();
-}
-
-// Function to partially update app data (for admin portal)
-export async function partialUpdateAppData(updates: Partial<AppData>): Promise<{ success: boolean; message: string; data: AppData }> {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
-
-  const res = await fetch(`${baseUrl}/api/data`, {
-    method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(updates),
-  });
-
-  if (!res.ok) {
-    throw new Error("Failed to update data");
-  }
-
+  if (!res.ok) throw new Error('Failed to update data');
   return res.json();
 }
