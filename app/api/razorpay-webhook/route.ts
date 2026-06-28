@@ -19,7 +19,6 @@ function validateSignature(rawBody: string, signature: string): boolean {
   return expected === signature;
 }
 
-<<<<<<< HEAD
 async function sendMetaPurchase({
   eventId,
   value,
@@ -62,89 +61,60 @@ async function sendMetaPurchase({
     }
   );
 
-=======
-async function sendMetaPurchase({ eventId, value, currency, email, phone }: { eventId: string; value: number; currency: string; email?: string; phone?: string; }) {
-  const payload = { data: [{ event_name: "Purchase", event_time: Math.floor(Date.now() / 1000), event_id: eventId, action_source: "website", user_data: { em: email ? hashData(email) : undefined, ph: phone ? hashData(phone) : undefined }, custom_data: { value, currency, content_type: "product" } }] };
-  const response = await fetch(`https://graph.facebook.com/v18.0/${META_PIXEL_ID}/events?access_token=${META_ACCESS_TOKEN}`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
->>>>>>> 0e14365cca772a472df16acdceac7164e2bf2d53
   return response.json();
 }
 
 // GET — view recent webhook log at /api/razorpay-webhook
 export async function GET() {
-<<<<<<< HEAD
   return NextResponse.json({
     message: "Last 20 webhook events",
     count: webhookLog.length,
-    events: webhookLog.slice().reverse(), // newest first
+    events: webhookLog.slice().reverse(),
   });
 }
 
-=======
-  return NextResponse.json({ message: "Last 20 webhook events", count: webhookLog.length, events: webhookLog.slice().reverse() });
-}
->>>>>>> 0e14365cca772a472df16acdceac7164e2bf2d53
 export async function POST(req: NextRequest) {
   const rawBody = await req.text();
   const signature = req.headers.get("x-razorpay-signature") || "";
 
   if (!validateSignature(rawBody, signature)) {
-<<<<<<< HEAD
     console.error("Razorpay webhook: invalid signature");
-=======
->>>>>>> 0e14365cca772a472df16acdceac7164e2bf2d53
     webhookLog.push({ time: new Date().toISOString(), event: "SIGNATURE_FAILED", error: "Invalid signature" });
     if (webhookLog.length > 20) webhookLog.shift();
     return NextResponse.json({ error: "Invalid signature" }, { status: 400 });
   }
 
   let event: any;
-<<<<<<< HEAD
   try {
     event = JSON.parse(rawBody);
   } catch {
     return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
   }
-=======
-  try { event = JSON.parse(rawBody); } catch { return NextResponse.json({ error: "Invalid JSON" }, { status: 400 }); }
->>>>>>> 0e14365cca772a472df16acdceac7164e2bf2d53
 
   const eventType = event.event;
   console.log("Razorpay webhook received:", eventType);
 
   if (eventType === "payment_link.paid" || eventType === "payment.captured") {
     const payment = event.payload?.payment?.entity;
-<<<<<<< HEAD
 
     if (!payment) {
       console.error("Razorpay webhook: no payment entity in payload");
-=======
-    if (!payment) {
->>>>>>> 0e14365cca772a472df16acdceac7164e2bf2d53
       webhookLog.push({ time: new Date().toISOString(), event: eventType, error: "No payment entity" });
       if (webhookLog.length > 20) webhookLog.shift();
       return NextResponse.json({ error: "No payment entity" }, { status: 400 });
     }
-<<<<<<< HEAD
 
-=======
->>>>>>> 0e14365cca772a472df16acdceac7164e2bf2d53
     const valueInRupees = payment.amount / 100;
     const currency = payment.currency || "INR";
     const email = payment.email;
     const phone = payment.contact;
-<<<<<<< HEAD
     const eventId = `rzp_${payment.id}`;
 
-=======
-    const eventId = "rzp_" + payment.id;
->>>>>>> 0e14365cca772a472df16acdceac7164e2bf2d53
     let metaResult: any = null;
     try {
       metaResult = await sendMetaPurchase({ eventId, value: valueInRupees, currency, email, phone });
       console.log("Meta CAPI Purchase sent:", { paymentId: payment.id, value: valueInRupees, metaResult });
     } catch (err) {
-<<<<<<< HEAD
       console.error("Meta CAPI error in webhook:", err);
     }
 
@@ -158,21 +128,9 @@ export async function POST(req: NextRequest) {
     });
     if (webhookLog.length > 20) webhookLog.shift();
   } else {
-    // Log other event types too
-=======
-      console.error("Meta CAPI error:", err);
-    }
-    webhookLog.push({ time: new Date().toISOString(), event: eventType, paymentId: payment.id, amount: valueInRupees, email: email || "not provided", metaResult });
-    if (webhookLog.length > 20) webhookLog.shift();
-  } else {
->>>>>>> 0e14365cca772a472df16acdceac7164e2bf2d53
     webhookLog.push({ time: new Date().toISOString(), event: eventType });
     if (webhookLog.length > 20) webhookLog.shift();
   }
 
   return NextResponse.json({ received: true });
-<<<<<<< HEAD
 }
-=======
-                                                                             }
->>>>>>> 0e14365cca772a472df16acdceac7164e2bf2d53
